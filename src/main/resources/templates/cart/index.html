@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Shopping Cart</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: #f8f8f8;
+	color: #444;
+}
+
+h1 {
+	text-align: center;
+	margin-top: 30px;
+	margin-bottom: 20px;
+}
+
+.cartList {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 30px auto;
+	padding: 20px;
+	background-color: #fff;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	border-radius: 5px;
+	max-width: 800px;
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+
+th, td {
+	padding: 10px;
+	text-align: left;
+	border-bottom: 1px solid #ccc;
+	font-size: 14px;
+	color: #333;
+}
+
+th {
+	background-color: #f2f2f2;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-weight: bold;
+	color: #555;
+}
+
+tfoot tr {
+	background-color: #f2f2f2;
+	font-weight: bold;
+	color: #555;
+}
+
+form[action*="/cart/remove/"] input[type="submit"] {
+	background-color: #f44336;
+	border: none;
+	color: white;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+	border-radius: 5px;
+}
+
+form[action*="/cart/updateQuantity"] input[type="submit"] {
+	background-color: #2196F3;
+	border: none;
+	color: white;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+	border-radius: 5px;
+}
+
+form[action*="/cart/checkout"] input[type="submit"] {
+	background-color: #4CAF50;
+	border: none;
+	color: white;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+	border-radius: 5px;
+}
+</style>
+</head>
+
+<body>
+	<h1>Shopping Cart</h1>
+	<div class="cartList">
+		<table>
+			<thead>
+				<tr>
+					<th>Product Name</th>
+					<th>Price</th>
+					<th>Quantity</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="product : ${cart}">
+					<td th:text="${product.getName()}"></td>
+					<td th:text="${product.getPrice()}"></td>
+					<td>
+						<form th:action="@{/cart/updateQuantity}" method="post">
+							<input type="hidden" name="id" th:value="${product.getId()}">
+							<input type="number" name="quantity"
+								th:value="${product.getQuantity}" min="1" max="999" step="1">
+							<input type="submit" value="Update">
+						</form>
+					</td>
+					<td>
+						<form th:action="@{/cart/remove/{id}(id=${product.getId()})}"
+							method="post">
+							<input type="submit" value="Remove">
+						</form>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="2">Total Price:</td>
+					<td th:text="${totalPrice}"></td>
+				</tr>
+			</tfoot>
+		</table>
+		<br>
+		<form th:action="@{/cart/checkout}" method="post">
+			<input type="submit" value="Proceed to Checkout">
+		</form>
+	</div>
+</body>
+
+</html>
