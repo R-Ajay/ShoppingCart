@@ -85,7 +85,7 @@ input[type="submit"] {
 				<td th:text="${product.id}"></td>
 				<td th:text="${product.name}"></td>
 				<td><img
-					th:src="@{file:///C:/Users/2116804/eclipse-workspace/ShoppinCart/src/main/resources/static/images/43UQ7500PSF-DZ-02.jpg}"
+					th:src="@{/images/__${product.image}__}"
 					alt="My Image" width="50" /></td>
 				<td th:text="${product.price}"></td>
 				<td>
