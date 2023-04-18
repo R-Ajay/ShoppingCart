@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.demo.shoppingcart.model.Carts;
 import com.demo.shoppingcart.model.Product;
+import com.demo.shoppingcart.repository.CartRepo;
 import com.demo.shoppingcart.repository.ProductRepo;
 import com.demo.shoppingcart.service.ProductService;
 
@@ -25,6 +27,9 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
+	@Autowired
+	private CartRepo cartRepo;
+	
 	private List<Product> cart = new ArrayList<>();
 
 
@@ -165,6 +170,15 @@ public class ProductController {
 	
 	@PostMapping( value="/cart/checkout")
 	public String checkout() {
+		
+		for(Product product : cart) {
+			Carts carts = new Carts();
+			carts.setProductId(product.getId());
+			carts.setProductName(product.getName());
+			carts.setProductPrice(product.getPrice());
+			carts.setQuantity(product.getQuantity());
+			cartRepo.save(carts);
+		}
 		
 		return "cart/thankyou";
 	}
